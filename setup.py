@@ -40,6 +40,7 @@ setup(
     install_requires=[
         "absl-py",
         "dill<0.3.6",
+        "cloudpickle>=3.0.0",
         "gpflow>=2.9.2",
         "gpflux>=0.4.4",
         "numpy",

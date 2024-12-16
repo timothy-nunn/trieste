@@ -38,7 +38,7 @@ from typing import (
 )
 
 import absl
-import dill
+import cloudpickle
 import numpy as np
 import tensorflow as tf
 from scipy.spatial.distance import pdist
@@ -135,7 +135,7 @@ class Record(Generic[StateType, ProbabilisticModelType]):
         """Save the record to disk. Will overwrite any existing file at the same path."""
         Path(path).parent.mkdir(exist_ok=True, parents=True)
         with open(path, "wb") as f:
-            dill.dump(self, f, dill.HIGHEST_PROTOCOL)
+            cloudpickle.dump(self, f)
         return FrozenRecord(Path(path))
 
 
@@ -154,7 +154,7 @@ class FrozenRecord(Generic[StateType, ProbabilisticModelType]):
     def load(self) -> Record[StateType, ProbabilisticModelType]:
         """Load the record into memory."""
         with open(self.path, "rb") as f:
-            return dill.load(f)
+            return cloudpickle.load(f)
 
     @property
     def datasets(self) -> Mapping[Tag, Dataset]:
@@ -317,7 +317,7 @@ class OptimizationResult(Generic[StateType, ProbabilisticModelType]):
         """Save the final result to disk. Will overwrite any existing file at the same path."""
         Path(path).parent.mkdir(exist_ok=True, parents=True)
         with open(path, "wb") as f:
-            dill.dump(self.final_result, f, dill.HIGHEST_PROTOCOL)
+            cloudpickle.dump(self.final_result, f)
 
     def save(self, base_path: Path | str) -> None:
         """Save the optimization result to disk. Will overwrite existing files at the same path."""
@@ -335,7 +335,7 @@ class OptimizationResult(Generic[StateType, ProbabilisticModelType]):
         """Load a previously saved OptimizationResult."""
         try:
             with open(Path(base_path) / cls.RESULTS_FILENAME, "rb") as f:
-                result = dill.load(f)
+                result = cloudpickle.load(f)
         except FileNotFoundError as e:
             result = Err(e)
 

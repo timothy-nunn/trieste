@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, Callable, List, Mapping, Optional, Tuple, Type, Union, cast
 from unittest.mock import patch
 
-import dill
+import cloudpickle
 import gpflow
 import numpy.testing as npt
 import pytest
@@ -814,7 +814,7 @@ def _test_optimizer_finds_minimum(
                         sampler.update_trajectory(acq_function)
 
                     # check that acquisition functions can be saved and reloaded
-                    acq_function_copy = dill.loads(dill.dumps(acq_function))
+                    acq_function_copy = cloudpickle.loads(cloudpickle.dumps(acq_function))
 
                     # and that the copy gives the same values as the original
                     batch_size = (
